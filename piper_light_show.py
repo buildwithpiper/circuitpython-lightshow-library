@@ -25,15 +25,14 @@
 #
 ################################################################################
 from micropython import const
-from adafruit_debouncer import Debouncer
 import board
 import busio
 import time
 from digitalio import DigitalInOut, Direction, Pull
 import _lightshow
 
-__version__ = "0.9.2"
-__repo__ = "https://github.com/derhexenmeister/LightShow.git"
+__version__ = "0.9.5"
+__repo__ = "https://github.com/buildwithpiper/LightShow.git"
 
 # Minimal number of colors
 #
@@ -82,13 +81,6 @@ _FONT = (
         b'\xff\xd3\xf3\xf9\xf3\xd3\xff\xf3\xf3\xf7\xf3\xf3\xff\xf1\xf3\xdb\xf3'
         b'\xf1\xff\xbfr\x8d\xfe\xff\xfff\x99f\x99f\x99')
 
-K_RIGHT = const(0x01)
-K_DOWN  = const(0x02)
-K_LEFT  = const(0x04)
-K_UP    = const(0x08)
-K_O     = const(0x40)
-K_X     = const(0x80)
-
 _screen = None
 
 # Map a 24-bit color tuple (RR, GG, BB) to a 6-bit color
@@ -112,24 +104,6 @@ def tick(delay):
 
     _tick += delay
     time.sleep(max(0, _tick - time.monotonic()))
-
-# Directional PAD
-#
-def keys():
-    global _up, _down, _left, _right
-    value = 0
-    if not _up.value:
-        value = value | K_UP
-    if not _down.value:
-        value = value | K_DOWN
-    if not _left.value:
-        value = value | K_LEFT
-    if not _right.value:
-        value = value | K_RIGHT
-    return value
-
-class GameOver(Exception):
-    pass
 
 class Pix:
     def __init__(self, width=8, height=8, buffer=None):
@@ -242,9 +216,8 @@ class Pix:
         )
 
 
-def init(dpad=False):
+def init():
     global _screen, _tick, _spi, _chip_select
-    global _up, _down, _left, _right
 
     if _screen is not None:
         return
@@ -252,15 +225,15 @@ def init(dpad=False):
     _screen = Pix(8, 8)
     _tick = time.monotonic()
 
-    _matrix_power = DigitalInOut(board.D5)
-    _matrix_power.direction = Direction.OUTPUT
-    _matrix_power.value = True
+    # TODO: These are hard-coded for now in the _lightshow 
+    # shared-bindings in our fork of CircuitPython
+    # so the pins and values below are ignored.
 
-    _chip_select = DigitalInOut(board.MISO)
+    _chip_select = DigitalInOut(board.GP17)
     _chip_select.direction = Direction.OUTPUT
     _chip_select.value = False
 
-    _spi = busio.SPI(board.SCK, MOSI=board.MOSI)
+    _spi = busio.SPI(board.GP18, board.GP19, board.GP16)
 
     while not _spi.try_lock():
         pass
@@ -270,28 +243,6 @@ def init(dpad=False):
     # to do other things. We are interrupting at a rate of 500 Hz.
     # If 8 MHz is too fast, then we will need to slow down the
     # interrupt rate and thus the screen refresh rate.
+        
     _spi.configure(baudrate=8000000, phase=0, polarity=0)
     _lightshow.LIGHTSHOW(_spi, _chip_select, _screen.buffer)
-
-    if dpad:
-        # TODO - handle DPAD for easier porting of PewPew projects
-        # probably want to move this out later
-        #
-        # Directional pad pins need pull-ups enabled
-        #
-        _right = DigitalInOut(board.D4)
-        _right.direction = Direction.INPUT
-        _right.pull = Pull.UP
-
-        _left = DigitalInOut(board.D3)
-        _left.direction = Direction.INPUT
-        _left.pull = Pull.UP
-
-        _up = DigitalInOut(board.D1)
-        _up.direction = Direction.INPUT
-        _up.pull = Pull.UP
-
-        _down = DigitalInOut(board.D0)
-        _down.direction = Direction.INPUT
-        _down.pull = Pull.UP
-
