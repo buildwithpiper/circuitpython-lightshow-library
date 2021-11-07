@@ -137,7 +137,7 @@ class Pix:
         return pix
 
     @classmethod
-    def from_iter(cls, lines):
+    def from_grid(cls, lines):
         pix = cls(len(lines[0]), len(lines))
         y = 0
         for line in lines:
@@ -166,7 +166,7 @@ class Pix:
                 self.buffer[xx] = color
                 xx += 1
 
-    def blit(self, source, dx=0, dy=0, x=0, y=0,
+    def draw(self, source, dx=0, dy=0, x=0, y=0,
              width=None, height=None, key=None):
         if dx < 0:
             x -= dx
