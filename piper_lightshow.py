@@ -92,7 +92,7 @@ def rgb_to_byte(color):
   b = ((color[2] >> 6) & 3)
   return (r | g | b)
 
-def digital_view_display()
+def digital_view_display():
     try:
         if (digital_view == True):
             print(chr(17), "GP17|D", chr(16), end="")
