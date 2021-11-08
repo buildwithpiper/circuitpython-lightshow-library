@@ -29,6 +29,7 @@ import board
 import busio
 import time
 from digitalio import DigitalInOut, Direction, Pull
+from piper_blockly import digital_view
 import _lightshow
 
 __version__ = "0.9.5"
@@ -91,13 +92,24 @@ def rgb_to_byte(color):
   b = ((color[2] >> 6) & 3)
   return (r | g | b)
 
+def digital_view_display()
+    try:
+        if (digital_view == True):
+            print(chr(17), "GP17|D", chr(16), end="")
+            print(chr(17), "GP18|D", chr(16), end="")
+            print(chr(17), "GP19|D", chr(16), end="")
+    except:
+        pass
+
 # Placeholder for global brightness setting
 #
 def brightness(level):
     pass
 
 def show(pix):
-    _screen.blit(pix)
+    _screen.draw(pix)
+    digital_view_display()
+
 
 def tick(delay):
     global _tick
