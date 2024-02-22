@@ -22,11 +22,11 @@ setup(
     name="lightshow",
     use_scm_version=True,
     setup_requires=["setuptools_scm"],
-    description="CircuitPython library for the LightShow module.",
+    description="CircuitPython library for the Lightshow module.",
     long_description=long_description,
     long_description_content_type="text/x-rst",
     # The project's main homepage.
-    url="https://github.com/buildwithpiper/LightShow.git",
+    url="https://github.com/buildwithpiper/circuitpython-lightshow-library.git",
     # Author details
     author="",
     author_email="",
