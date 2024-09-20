@@ -2,6 +2,7 @@
 # The MIT License (MIT)
 #
 # Copyright (c) 2020 Keith Evans
+# Copyright (c) 2024 Matthew Matz, Play Piper LLC
 # Based on PewPew
 # Copyright (c) 2019 Radomir Dopieralski
 #
