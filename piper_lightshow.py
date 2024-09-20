@@ -30,7 +30,7 @@ import busio
 from digitalio import DigitalInOut, Direction
 import _lightshow
 
-__version__ = "0.9.6"
+__version__ = "1.1.0"
 __repo__ = "https://github.com/buildwithpiper/LightShow.git"
 
 _LIGHTSHOW_FONT = memoryview(
